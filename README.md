@@ -76,9 +76,7 @@ An Example Preferences:
 
 ## Site map
 
-(__TODO__: draw out a site map that shows how pages are related to each other)
-
-Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia/commons/2/20/Sitemap_google.jpg), but you can create one without the screenshots, drop shadows, etc. ... just names of pages and where they flow to.
+![site map](documentation/sitemap1.png)
 
 ## User Stories or Use Cases
 
@@ -102,7 +100,7 @@ Here's a [complex example from wikipedia](https://upload.wikimedia.org/wikipedia
 
 ## [Link to Initial Main Project File](app.mjs) 
 
-(__TODO__: create a skeleton Express application with a package.json, app.mjs, views folder, etc. ... and link to your initial app.mjs)
+
 
 ## Annotations / References Used
 
