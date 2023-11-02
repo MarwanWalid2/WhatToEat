@@ -60,19 +60,15 @@ An Example Preferences:
 
 ## Wireframes
 
-(__TODO__: wireframes for all of the pages on your site; they can be as simple as photos of drawings or you can use a tool like Balsamiq, Omnigraffle, etc.)
 
-/list/create - page for creating a new shopping list
+/ - landing page
 
-![list create](documentation/list-create.png)
+![home](documentation/home.png)
 
-/list - page for showing all shopping lists
+/signup - page for signing up
 
-![list](documentation/list.png)
+![signup](documentation/signup.png)
 
-/list/slug - page for showing specific shopping list
-
-![list](documentation/list-slug.png)
 
 ## Site map
 
