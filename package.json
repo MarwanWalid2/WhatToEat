@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mongoose": "^8.0.0",
+    "node": "^21.1.0",
+    "path": "^0.12.7",
+    "url": "^0.11.3"
+  },
+  "name": "final-project-marwanwalid2",
+  "description": "## Overview",
+  "version": "1.0.0",
+  "main": "app.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nyu-csci-ua-0467-001-002-fall-2023/final-project-MarwanWalid2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nyu-csci-ua-0467-001-002-fall-2023/final-project-MarwanWalid2/issues"
+  },
+  "homepage": "https://github.com/nyu-csci-ua-0467-001-002-fall-2023/final-project-MarwanWalid2#readme"
+}
