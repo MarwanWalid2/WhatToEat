@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Preferences</title>
+</head>
+<body>
+    <script defer src="/js/client.js"></script>
+  <h1>Edit Preferences</h1>
+  <form id="preferences-form">
+    <label for="dietaryRestrictions">Dietary Restrictions:</label>
+<input type="text" id="dietaryRestrictions" name="dietaryRestrictions" value="{{preferences.dietaryRestrictions}}" required>
+
+    <label for="dislikedIngredients">Disliked Ingredients:</label>
+<input type="text" id="dislikedIngredients" name="dislikedIngredients" value="{{preferences.dislikedIngredients}}" required>
+
+    <label for="preferredCuisines">Preferred Cuisines:</label>
+<input type="text" id="preferredCuisines" name="preferredCuisines" value="{{preferences.preferredCuisines}}" required>
+
+    <label for="maxPreparationTime">Max Preparation Time (minutes):</label>
+    <input type="number" id="maxPreparationTime" name="maxPreparationTime" value="{{preferences.maxPreparationTime}}" required>
+
+    <button type="submit">Update</button>
+  </form>
+ <p>Your preferences:</p>
+    <ul>
+  <li id="dietaryRestrictions">Dietary Restrictions: {{user.preferences.dietaryRestrictions}}</li>
+  <li id="dislikedIngredients">Disliked Ingredients: {{user.preferences.dislikedIngredients}}</li>
+  <li id="preferredCuisines">Preferred Cuisines: {{user.preferences.preferredCuisines}}</li>
+    <li id="maxPreparationTime">Max Preparation Time: {{user.preferences.maxPreparationTime}}</li>
+</ul>
+
+<a href="/profile">Back to dashboard</a>
+
+
+
+
+</body>
+</html>

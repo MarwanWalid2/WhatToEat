@@ -8,16 +8,18 @@
 
 <h1>{{title}}</h1>
 
+<!-- Search form -->
+<form action="/recipes" method="get">
+    <input type="text" name="cuisine" placeholder="Search by cuisine...">
+    <button type="submit">Search</button>
+</form>
+
 {{#if recipes}}
   <ul>
     {{#each recipes}}
       <li>
         <h2>{{this.title}}</h2>
-        <img src="{{this.image}}" alt="{{this.title}}" />
-        <p>{{this.cuisine}}</p>
-        {{#if this.nutrition}}
-          <p>Calories: {{this.nutrition.nutrients.0.amount}} kcal</p>
-        {{/if}}
+        <img src="{{this.image}}" alt="{{this.title}}" />        
       </li>
     {{/each}}
   </ul>

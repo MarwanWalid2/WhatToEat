@@ -118,7 +118,7 @@ app.post('/signup', async (req, res) => {
     const user = new User({
       username: req.body.username,
       hash: hashedPassword,
-      preferences: userpreferences, // or set a default if you have one
+      preferences: userpreferences, 
       likedRecipes: [],
       dislikedRecipes: []
     });
@@ -128,9 +128,6 @@ app.post('/signup', async (req, res) => {
     // user.preferences = preferences;
     await user.save();
 
-
-
-    // Respond to the client
     res.redirect('/profile');
   } catch (error) {
     res.render('signup', { error: 'An error occurred. Please try again.' });
@@ -185,28 +182,85 @@ app.get('/', (req, res) => {
 
 
 
-app.get('/recipes', async (req, res) => {
+  app.get('/recipes', async (req, res) => {
+    try {
+      const apiUrl = 'https://api.spoonacular.com/recipes/complexSearch';
+      const apiKey = process.env.API_KEY; 
+      const queryParams = new URLSearchParams({
+        number: 10,
+        ...(req.query.cuisine ? { cuisine: req.query.cuisine } : {}), // Add the cuisine if provided
+      });
+  
+      const response = await fetch(`${apiUrl}?${queryParams}&apiKey=${apiKey}`);
+      if (!response.ok) throw new Error('Failed to fetch recipes');
+  
+      const data = await response.json();
+      // console.log(data);
+  
+      res.render('recipe', {
+        title: 'Recipe Suggestions',
+        recipes: data.results, 
+      });
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+      res.status(500).send('Error fetching recipes');
+    }
+  });
+  
+
+
+app.get('/edit-preferences', ensureAuthenticated, async (req, res) => {
   try {
-    const apiUrl = 'https://api.spoonacular.com/recipes/complexSearch';
-    const apiKey = '4241c8d138ed4bd391cc7e2866270725'; 
-    const queryParams = new URLSearchParams({
-      number: 10, 
-    });
+    const user = await User.findById(req.user._id).populate('preferences');
+    if (!user) {
+      res.status(404).send('User not found');
+      return;
+    }
 
-    const response = await fetch(`${apiUrl}?${queryParams}&apiKey=${apiKey}`);
-    if (!response.ok) throw new Error('Failed to fetch recipes');
+    const preferences = {
+      ...user.preferences.toObject(),
+      dietaryRestrictions: user.preferences.dietaryRestrictions.join(', '),
+      dislikedIngredients: user.preferences.dislikedIngredients.join(', '),
+      preferredCuisines: user.preferences.preferredCuisines.join(', '),
+    };
 
-    const data = await response.json();
-
-    res.render('recipe', {
-      title: 'Recipe Suggestions',
-      recipes: data.results, 
+    res.render('edit_preferences', {
+      title: 'Edit Preferences',
+      user: user,
+      preferences: preferences
     });
   } catch (error) {
-    console.error('Error fetching recipes:', error);
-    res.status(500).send('Error fetching recipes');
+    console.error('Error accessing preferences:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
+
+
+
+app.post('/update-preferences', ensureAuthenticated, async (req, res) => {
+  try {
+    const { dietaryRestrictions, dislikedIngredients, preferredCuisines, maxPreparationTime } = req.body;
+    
+    await Preferences.updateOne(
+      { _id: req.user.preferences },
+      {
+        dietaryRestrictions: dietaryRestrictions.split(',').map(s => s.trim()),
+        dislikedIngredients: dislikedIngredients.split(',').map(s => s.trim()),
+        preferredCuisines: preferredCuisines.split(',').map(s => s.trim()),
+        maxPreparationTime: parseInt(maxPreparationTime, 10)
+      }
+    );
+
+    res.json({ success: true, message: "Preferences updated successfully." });
+  } catch (error) {
+    console.error('Error updating preferences:', error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+
+
+
 
 
 app.listen(process.env.PORT ?? 3000);
