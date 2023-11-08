@@ -28,19 +28,6 @@ An Example User:
 
 ```
 
-An Example Recipe:
-
-```javascript
-{
-  title: "Creamy Tomato Pasta",
-  ingredients: ["tomato", "pasta", "cream", ...],
-  dietaryRestrictions: ["vegetarian"],
-  preparationTime: 30,
-  likes: 150, // number of likes
-  dislikes: 10 // number of dislikes
-}
-```
-
 An Example Preferences:
 
 ```javascript
@@ -85,12 +72,24 @@ An Example Preferences:
 
 ## Research Topics
 
-* (3 points) Unit testing with Mocha/Chai for backend logic.
-    * Writing tests for user authentication, preference saving, and recipe suggestion logic.
 * (2 points) Client-side form validation with custom JavaScript.
-    * Ensuring all forms have proper input validation before being sent to the server.
+    * Implemented custom JavaScript to ensure all forms have proper input validation before being sent to the server.
+    * Dynamic error messages are displayed in the DOM for user feedback.
+
 * (5 points) Integration of an external API for recipe data.
-    * Utilizing the Spoonacular API to get recipes and nutritional facts for suggestions
+    * Utilized the Spoonacular API to fetch recipes and nutritional facts based on user preferences.
+    * [Link to source code with API integration](https://github.com/nyu-csci-ua-0467-001-002-fall-2023/final-project-MarwanWalid2/blob/0f1b05c69d409196a13146057df1af0ef7e8cc31/app.mjs#L185-L208)
+
+* (2 points) Deployment on Heroku.
+    * Deployed the application on Heroku, with proper setup for continuous integration and delivery.
+    * Securely configured environment variables for API keys and database connections.
+    * [Link to live application](https://whattoeat-f3667d115c2c.herokuapp.com/)
+
+* (3 points) Authentication with Passport.js and bcrypt.js.
+    * Integrated Passport.js for robust user authentication processes within the application.
+    * Leveraged bcrypt.js for secure password hashing and storage.
+
+
 
 
 
@@ -100,8 +99,8 @@ An Example Preferences:
 
 ## Annotations / References Used
 
-(__TODO__: list any tutorials/references/etc. that you've based your code off of)
 
-1. [passport.js authentication docs](http://passportjs.org/docs) - (add link to source code that was based on this)
-2. [tutorial on vue.js](https://vuejs.org/v2/guide/) - (add link to source code that was based on this)
+1. [passport.js authentication docs](http://passportjs.org/docs)
+2. [Spoonacular API Documentation](https://spoonacular.com/food-api/docs)
+- 
 
