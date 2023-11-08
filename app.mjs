@@ -5,7 +5,7 @@ import './config.mjs';
 import session from 'express-session';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import './db.mjs';
 import mongoose from 'mongoose';
 import fetch from 'node-fetch';
