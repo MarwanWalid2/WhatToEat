@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>Profile Page</h1>
+    <p>Welcome, {{user.username}}!</p>
+    <p>Your preferences:</p>
+    <ul>
+      <li>Dietary Restrictions: {{user.preferences.dietaryRestrictions}}</li>
+      <li>Disliked Ingredients: {{user.preferences.dislikedIngredients}}</li>
+      <li>Preferred Cuisines: {{user.preferences.preferredCuisines}}</li>
+    </ul>
+    <a href="/logout">Logout</a>
+</body>
+</html>

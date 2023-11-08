@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+</head>
+<body>
+
+<h1>{{title}}</h1>
+
+{{#if recipes}}
+  <ul>
+    {{#each recipes}}
+      <li>
+        <h2>{{this.title}}</h2>
+        <img src="{{this.image}}" alt="{{this.title}}" />
+        <p>{{this.cuisine}}</p>
+        {{#if this.nutrition}}
+          <p>Calories: {{this.nutrition.nutrients.0.amount}} kcal</p>
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>No recipes found.</p>
+{{/if}}
+
+</body>
+</html>

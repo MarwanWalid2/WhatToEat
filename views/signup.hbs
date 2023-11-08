@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up & Set Preferences</title>
+</head>
+<body>
+
+<h2>Sign Up and Set Preferences</h2>
+<!-- Check if there is an error message and display it -->
+{{#if error}}
+<div style="color: red;">{{error}}</div>
+{{/if}}
+<form id="signup-preferences-form" action="/signup" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+    <label for="dietaryRestrictions">Dietary Restrictions (comma-separated):</label>
+    <input type="text" id="dietaryRestrictions" name="dietaryRestrictions">
+    <br>
+    <label for="dislikedIngredients">Disliked Ingredients (comma-separated):</label>
+    <input type="text" id="dislikedIngredients" name="dislikedIngredients">
+    <br>
+    <label for="preferredCuisines">Preferred Cuisines (comma-separated):</label>
+    <input type="text" id="preferredCuisines" name="preferredCuisines">
+    <br>
+    <label for="maxPreparationTime">Max Preparation Time (minutes):</label>
+    <input type="number" id="maxPreparationTime" name="maxPreparationTime">
+    <br>
+    <input type="submit" value="Sign Up">
+</form>
+
+ <form action="/login" method="get">
+        <button type="submit">Login instead?</button>
+    </form>
+</body>
+</html>
