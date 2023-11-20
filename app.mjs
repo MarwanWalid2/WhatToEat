@@ -3,12 +3,15 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 import './config.mjs';
 import session from 'express-session';
+import exphbs from 'express-handlebars';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
 import './db.mjs';
 import mongoose from 'mongoose';
 import fetch from 'node-fetch';
+
+
 
 const User = mongoose.model('User');
 const Preferences = mongoose.model('Preferences');
@@ -20,7 +23,17 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const hbs = exphbs.create({
+  extname: '.hbs',
+  defaultLayout: false,
+});
 
+hbs.handlebars.registerHelper('isCuisineSelected', (preferences, cuisine) => {
+  return preferences.includes(cuisine) ? 'selected' : '';
+});
+
+
+app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 
 app.use(express.urlencoded({ extended: true }));
@@ -36,6 +49,8 @@ app.use(session({
 }));
 
 
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -43,6 +58,8 @@ app.use(express.json());
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+
 
 
 
