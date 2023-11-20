@@ -5,34 +5,54 @@
 </head>
 <body>
     <script defer src="/js/client.js"></script>
-  <h1>Edit Preferences</h1>
-  <form id="preferences-form">
-    <label for="dietaryRestrictions">Dietary Restrictions:</label>
-<input type="text" id="dietaryRestrictions" name="dietaryRestrictions" value="{{preferences.dietaryRestrictions}}" required>
+    <h1>Edit Preferences</h1>
+    <form id="preferences-form">
+        <label for="dietaryRestrictions">Dietary Restrictions:</label>
+        <input type="text" id="dietaryRestrictions" name="dietaryRestrictions" value="{{preferences.dietaryRestrictions}}" required>
 
-    <label for="dislikedIngredients">Disliked Ingredients:</label>
-<input type="text" id="dislikedIngredients" name="dislikedIngredients" value="{{preferences.dislikedIngredients}}" required>
+        <label for="dislikedIngredients">Disliked Ingredients:</label>
+        <input type="text" id="dislikedIngredients" name="dislikedIngredients" value="{{preferences.dislikedIngredients}}" required>
 
-    <label for="preferredCuisines">Preferred Cuisines:</label>
-<input type="text" id="preferredCuisines" name="preferredCuisines" value="{{preferences.preferredCuisines}}" required>
+        <label for="preferredCuisines">Preferred Cuisines:</label>
+        <select id="preferredCuisines" name="preferredCuisines" multiple>
+            <option value="African" {{#if (isCuisineSelected preferences.preferredCuisines "African")}}selected{{/if}}>African</option>
+            <option value="Asian" {{#if (isCuisineSelected preferences.preferredCuisines "Asian")}}selected{{/if}}>Asian</option>
+            <option value="American" {{#if (isCuisineSelected preferences.preferredCuisines "American")}}selected{{/if}}>American</option>
+            <option value="British" {{#if (isCuisineSelected preferences.preferredCuisines "British")}}selected{{/if}}>British</option>
+            <option value="Cajun" {{#if (isCuisineSelected preferences.preferredCuisines "Cajun")}}selected{{/if}}>Cajun</option>
+            <option value="Caribbean" {{#if (isCuisineSelected preferences.preferredCuisines "Caribbean")}}selected{{/if}}>Caribbean</option>
+            <option value="Chinese" {{#if (isCuisineSelected preferences.preferredCuisines "Chinese")}}selected{{/if}}>Chinese</option>
+            <option value="Eastern European" {{#if (isCuisineSelected preferences.preferredCuisines "Eastern European")}}selected{{/if}}>Eastern European</option>
+            <option value="European" {{#if (isCuisineSelected preferences.preferredCuisines "European")}}selected{{/if}}>European</option>
+            <option value="French" {{#if (isCuisineSelected preferences.preferredCuisines "French")}}selected{{/if}}>French</option>
+            <option value="German" {{#if (isCuisineSelected preferences.preferredCuisines "German")}}selected{{/if}}>German</option>
+            <option value="Greek" {{#if (isCuisineSelected preferences.preferredCuisines "Greek")}}selected{{/if}}>Greek</option>
+            <option value="Indian" {{#if (isCuisineSelected preferences.preferredCuisines "Indian")}}selected{{/if}}>Indian</option>
+            <option value="Irish" {{#if (isCuisineSelected preferences.preferredCuisines "Irish")}}selected{{/if}}>Irish</option>
+            <option value="Italian" {{#if (isCuisineSelected preferences.preferredCuisines "Italian")}}selected{{/if}}>Italian</option>
+            <option value="Japanese" {{#if (isCuisineSelected preferences.preferredCuisines "Japanese")}}selected{{/if}}>Japanese</option>
+            <option value="Korean" {{#if (isCuisineSelected preferences.preferredCuisines "Korean")}}selected{{/if}}>Korean</option>
+            <option value="Mediterranean" {{#if (isCuisineSelected preferences.preferredCuisines "Mediterranean")}}selected{{/if}}>Mediterranean</option>
+            <option value="Mexican" {{#if (isCuisineSelected preferences.preferredCuisines "Mexican")}}selected{{/if}}>Mexican</option>
+            <option value="Middle Eastern" {{#if (isCuisineSelected preferences.preferredCuisines "Middle Eastern")}}selected{{/if}}>Middle Eastern</option>
+            <option value="Spanish" {{#if (isCuisineSelected preferences.preferredCuisines "Spanish")}}selected{{/if}}>Spanish</option>
+            <option value="Thai" {{#if (isCuisineSelected preferences.preferredCuisines "Thai")}}selected{{/if}}>Thai</option>
+            <option value="Vietnamese" {{#if (isCuisineSelected preferences.preferredCuisines "Vietnamese")}}selected{{/if}}>Vietnamese</option>
+</select>
 
-    <label for="maxPreparationTime">Max Preparation Time (minutes):</label>
-    <input type="number" id="maxPreparationTime" name="maxPreparationTime" value="{{preferences.maxPreparationTime}}" required>
+        <label for="maxPreparationTime">Max Preparation Time (minutes):</label>
+        <input type="number" id="maxPreparationTime" name="maxPreparationTime" value="{{preferences.maxPreparationTime}}" required>
 
-    <button type="submit">Update</button>
-  </form>
- <p>Your preferences:</p>
+        <button type="submit">Update</button>
+    </form>
+    <p>Your preferences:</p>
     <ul>
-  <li id="dietaryRestrictions">Dietary Restrictions: {{user.preferences.dietaryRestrictions}}</li>
-  <li id="dislikedIngredients">Disliked Ingredients: {{user.preferences.dislikedIngredients}}</li>
-  <li id="preferredCuisines">Preferred Cuisines: {{user.preferences.preferredCuisines}}</li>
-    <li id="maxPreparationTime">Max Preparation Time: {{user.preferences.maxPreparationTime}}</li>
-</ul>
+        <li id="dietaryRestrictions">Dietary Restrictions: {{user.preferences.dietaryRestrictions}}</li>
+        <li id="dislikedIngredients">Disliked Ingredients: {{user.preferences.dislikedIngredients}}</li>
+        <li id="preferredCuisines">Preferred Cuisines: {{user.preferences.preferredCuisines}}</li>
+        <li id="maxPreparationTime">Max Preparation Time: {{user.preferences.maxPreparationTime}}</li>
+    </ul>
 
-<a href="/profile">Back to dashboard</a>
-
-
-
-
+    <a href="/profile">Back to dashboard</a>
 </body>
 </html>

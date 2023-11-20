@@ -108,9 +108,12 @@ app.post('/signup', async (req, res) => {
     const userpreferences = new Preferences({
       dietaryRestrictions: req.body.dietaryRestrictions.split(',').map(s => s.trim()), 
       dislikedIngredients: req.body.dislikedIngredients.split(',').map(s => s.trim()), 
-      preferredCuisines: req.body.preferredCuisines.split(',').map(s => s.trim()), 
+      preferredCuisines: Array.isArray(req.body.preferredCuisines) 
+                         ? req.body.preferredCuisines 
+                         : req.body.preferredCuisines.split(',').map(s => s.trim()), 
       maxPreparationTime: parseInt(req.body.maxPreparationTime, 10) 
     });
+    
     
 
     await userpreferences.save();
@@ -130,6 +133,7 @@ app.post('/signup', async (req, res) => {
 
     res.redirect('/profile');
   } catch (error) {
+    console.error('Error:', error);
     res.render('signup', { error: 'An error occurred. Please try again.' });
 
   }
@@ -180,35 +184,43 @@ app.get('/', (req, res) => {
 
 
 
-
-
-  app.get('/recipes', async (req, res) => {
+  
+  app.get('/recipes', ensureAuthenticated, async (req, res) => {
     try {
+      const user = await User.findById(req.user._id).populate('preferences');
+      if (!user) {
+        res.status(404).send('User not found');
+        return;
+      }
+  
       const apiUrl = 'https://api.spoonacular.com/recipes/complexSearch';
-      const apiKey = process.env.API_KEY; 
-      const queryParams = new URLSearchParams({
+      const apiKey = process.env.API_KEY;
+      let queryParams = new URLSearchParams({
         number: 10,
-        ...(req.query.cuisine ? { cuisine: req.query.cuisine } : {}), // Add the cuisine if provided
+        cuisine: req.query.cuisine || user.preferences.preferredCuisines.join(', ')
       });
   
       const response = await fetch(`${apiUrl}?${queryParams}&apiKey=${apiKey}`);
       if (!response.ok) throw new Error('Failed to fetch recipes');
   
       const data = await response.json();
-      // console.log(data);
   
-      res.render('recipe', {
-        title: 'Recipe Suggestions',
-        recipes: data.results, 
-      });
+      if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+        res.json(data.results); 
+      } else {
+        res.render('recipe', {
+          title: 'Recipe Suggestions',
+          recipes: data.results,
+          userPreferredCuisines: user.preferences.preferredCuisines.join(', ')
+        }); 
+      }
     } catch (error) {
-      console.error('Error fetching recipes:', error);
-      res.status(500).send('Error fetching recipes');
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
     }
   });
   
-
-
+  
 app.get('/edit-preferences', ensureAuthenticated, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).populate('preferences');

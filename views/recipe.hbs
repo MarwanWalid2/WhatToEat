@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
+
 </head>
 <body>
+    <script defer src="/js/client.js"></script> 
 
 <h1>{{title}}</h1>
 
-<!-- Search form -->
-<form action="/recipes" method="get">
-    <input type="text" name="cuisine" placeholder="Search by cuisine...">
-    <button type="submit">Search</button>
+<form id="recipe-search-form">
+  <input type="text" id="cuisine-search" name="cuisine" placeholder="Search cuisines..." value="{{userPreferredCuisines}}">
+  <button type="submit">Search</button>
 </form>
 
-{{#if recipes}}
-  <ul>
-    {{#each recipes}}
-      <li>
-        <h2>{{this.title}}</h2>
-        <img src="{{this.image}}" alt="{{this.title}}" />        
-      </li>
-    {{/each}}
-  </ul>
-{{else}}
-  <p>No recipes found.</p>
-{{/if}}
+<div id="recipes-container">
+  {{#if recipes}}
+    <ul>
+      {{#each recipes}}
+        <li>
+          <h2>{{this.title}}</h2>
+          <img src="{{this.image}}" alt="{{this.title}}" />        
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>No recipes found.</p>
+  {{/if}}
+</div>
 
 </body>
 </html>
