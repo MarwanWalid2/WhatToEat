@@ -63,14 +63,30 @@ function updatePreferencesDisplay(formData) {
 }
 
 
+
+// Handle the cuisine search form submission
 document.getElementById('recipe-search-form').addEventListener('submit', function(event) {
   event.preventDefault();
   const searchQuery = document.getElementById('cuisine-search').value;
 
-  fetch(`/recipes?cuisine=${encodeURIComponent(searchQuery)}`, {
+  performSearch({ cuisine: searchQuery });
+});
+
+// Handle the ingredient search form submission
+document.getElementById('ingredient-search-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const ingredients = document.getElementById('ingredient-search').value;
+
+  performSearch({ ingredients: ingredients });
+});
+
+function performSearch(params) {
+  const query = new URLSearchParams(params).toString();
+
+  fetch(`/recipes?${query}`, {
     method: 'GET',
     headers: {
-      'X-Requested-With': 'XMLHttpRequest' // This header indicates an AJAX request
+      'X-Requested-With': 'XMLHttpRequest'
     }
   })
   .then(response => response.json())
@@ -80,11 +96,11 @@ document.getElementById('recipe-search-form').addEventListener('submit', functio
   .catch(error => {
     console.error('Error:', error);
   });
-});
+}
 
 function updateRecipesOnPage(recipes) {
   const recipesContainer = document.getElementById('recipes-container');
-  recipesContainer.innerHTML = ''; // Clear current content
+  recipesContainer.innerHTML = ''; 
 
   recipes.forEach(recipe => {
       const recipeElement = document.createElement('div');

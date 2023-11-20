@@ -26,6 +26,10 @@ const __dirname = path.dirname(__filename);
 const hbs = exphbs.create({
   extname: '.hbs',
   defaultLayout: false,
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true,
+  },
 });
 
 hbs.handlebars.registerHelper('isCuisineSelected', (preferences, cuisine) => {
@@ -201,7 +205,6 @@ app.get('/', (req, res) => {
 
 
 
-  
   app.get('/recipes', ensureAuthenticated, async (req, res) => {
     try {
       const user = await User.findById(req.user._id).populate('preferences');
@@ -210,12 +213,19 @@ app.get('/', (req, res) => {
         return;
       }
   
-      const apiUrl = 'https://api.spoonacular.com/recipes/complexSearch';
+      let apiUrl;
+      let queryParams = new URLSearchParams({ number: 10 });
       const apiKey = process.env.API_KEY;
-      let queryParams = new URLSearchParams({
-        number: 10,
-        cuisine: req.query.cuisine || user.preferences.preferredCuisines.join(', ')
-      });
+  
+      if (req.query.ingredients) {
+        // Search by ingredients
+        apiUrl = 'https://api.spoonacular.com/recipes/findByIngredients';
+        queryParams.append('ingredients', req.query.ingredients);
+      } else {
+        // Search by cuisine 
+        apiUrl = 'https://api.spoonacular.com/recipes/complexSearch';
+        queryParams.append('cuisine', req.query.cuisine || user.preferences.preferredCuisines.join(', '));
+      }
   
       const response = await fetch(`${apiUrl}?${queryParams}&apiKey=${apiKey}`);
       if (!response.ok) throw new Error('Failed to fetch recipes');
@@ -223,11 +233,11 @@ app.get('/', (req, res) => {
       const data = await response.json();
   
       if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
-        res.json(data.results); 
+        res.json(data.results || data); 
       } else {
         res.render('recipe', {
           title: 'Recipe Suggestions',
-          recipes: data.results,
+          recipes: data.results || data,
           userPreferredCuisines: user.preferences.preferredCuisines.join(', ')
         }); 
       }
