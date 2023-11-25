@@ -2,11 +2,17 @@
 <html>
 <head>
   <title>Edit Preferences</title>
+          <link rel="stylesheet" href="/css/styles.css">
+
 </head>
 <body>
     <script defer src="/js/client.js"></script>
     <h1>Edit Preferences</h1>
-    <form id="preferences-form">
+        <div id="update-message"></div>
+
+        <div class="flex-container">
+
+<form id="preferences-form" class="flex-form">
         <label for="dietaryRestrictions">Dietary Restrictions:</label>
         <input type="text" id="dietaryRestrictions" name="dietaryRestrictions" value="{{preferences.dietaryRestrictions}}" required>
 
@@ -40,18 +46,23 @@
             <option value="Vietnamese" {{#if (isCuisineSelected preferences.preferredCuisines "Vietnamese")}}selected{{/if}}>Vietnamese</option>
 </select>
 
-        <label for="maxPreparationTime">Max Preparation Time (minutes):</label>
-        <input type="number" id="maxPreparationTime" name="maxPreparationTime" value="{{preferences.maxPreparationTime}}" required>
+        <label for="minimumProtien">Minimum Protien:</label>
+        <input type="number" id="minimumProtien" name="minimumProtien" value="{{preferences.minimumProtien}}" required>
 
         <button type="submit">Update</button>
     </form>
+
+
+      <div class="profile-editpreferences">
     <p>Your preferences:</p>
     <ul>
         <li id="dietaryRestrictions">Dietary Restrictions: {{user.preferences.dietaryRestrictions}}</li>
         <li id="dislikedIngredients">Disliked Ingredients: {{user.preferences.dislikedIngredients}}</li>
         <li id="preferredCuisines">Preferred Cuisines: {{user.preferences.preferredCuisines}}</li>
-        <li id="maxPreparationTime">Max Preparation Time: {{user.preferences.maxPreparationTime}}</li>
+        <li id="minimumProtien">Minimum Protien: {{user.preferences.minimumProtien}}</li>
     </ul>
+    </div>
+    </div>
 
     <a href="/profile">Back to dashboard</a>
 </body>

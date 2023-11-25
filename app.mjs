@@ -15,7 +15,6 @@ import fetch from 'node-fetch';
 
 const User = mongoose.model('User');
 const Preferences = mongoose.model('Preferences');
-const Recipe = mongoose.model('Recipe');
 
 const saltRounds = 10; 
 
@@ -36,6 +35,10 @@ hbs.handlebars.registerHelper('isCuisineSelected', (preferences, cuisine) => {
   return preferences.includes(cuisine) ? 'selected' : '';
 });
 
+hbs.handlebars.registerHelper('lookupNutrient', function(nutrients, name) {
+  const nutrient = nutrients.find(n => n.name === name);
+  return nutrient ? `${nutrient.amount}${nutrient.unit}` : 'Not available';
+});
 
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
@@ -103,11 +106,25 @@ passport.deserializeUser(async (id, done) => {
 
 
 
-app.post('/login', passport.authenticate('local', {
-  successRedirect: '/profile',
-  failureRedirect: '/login',
-  failureFlash: false
-}));
+app.post('/login', (req, res, next) => {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) { 
+      return next(err); 
+    }
+    if (!user) { 
+      return res.render('login', { 
+        title: 'Login', 
+        error: 'Invalid username or password.' 
+      });
+    }
+    req.logIn(user, function(err) {
+      if (err) { 
+        return next(err); 
+      }
+      return res.redirect('/profile');
+    });
+  })(req, res, next);
+});
 
 app.get('/logout', (req, res) => {
   req.logout();
@@ -132,7 +149,7 @@ app.post('/signup', async (req, res) => {
       preferredCuisines: Array.isArray(req.body.preferredCuisines) 
                          ? req.body.preferredCuisines 
                          : req.body.preferredCuisines.split(',').map(s => s.trim()), 
-      maxPreparationTime: parseInt(req.body.maxPreparationTime, 10) 
+      minimumProtien: parseInt(req.body.minimumProtien, 10) 
     });
     
     
@@ -199,10 +216,9 @@ app.get('/', (req, res) => {
     if (req.isAuthenticated()) {
       return next();
     }
-    res.redirect('/login'); // or your login route
+    res.redirect('/'); // or your login route
   }
   
-
 
 
   app.get('/recipes', ensureAuthenticated, async (req, res) => {
@@ -214,31 +230,47 @@ app.get('/', (req, res) => {
       }
   
       let apiUrl;
-      let queryParams = new URLSearchParams({ number: 10 });
+      let queryParams = new URLSearchParams({ number: 3 });
       const apiKey = process.env.API_KEY;
-  
+
       if (req.query.ingredients) {
-        // Search by ingredients
         apiUrl = 'https://api.spoonacular.com/recipes/findByIngredients';
         queryParams.append('ingredients', req.query.ingredients);
+      } else if (req.query.minProtein || user.preferences.minimumProtien) {
+        apiUrl = 'https://api.spoonacular.com/recipes/findByNutrients';
+        queryParams.append('minProtein', req.query.minProtein || user.preferences.minimumProtien);
       } else {
-        // Search by cuisine 
         apiUrl = 'https://api.spoonacular.com/recipes/complexSearch';
         queryParams.append('cuisine', req.query.cuisine || user.preferences.preferredCuisines.join(', '));
+        queryParams.append('addRecipeNutrition', true);
       }
   
-      const response = await fetch(`${apiUrl}?${queryParams}&apiKey=${apiKey}`);
+
+      let response = await fetch(`${apiUrl}?${queryParams}&apiKey=${apiKey}`);
       if (!response.ok) throw new Error('Failed to fetch recipes');
   
-      const data = await response.json();
+      let recipes = await response.json();
+      recipes = recipes.results || recipes;
+  
+      if (req.query.ingredients || req.query.minProtein || user.preferences.minimumProtien) {
+        // Fetch detailed information for each recipe
+        for (let recipe of recipes) {
+          const detailResponse = await fetch(`https://api.spoonacular.com/recipes/${recipe.id}/information?includeNutrition=true&apiKey=${apiKey}`);
+          if (detailResponse.ok) {
+            const detailedInfo = await detailResponse.json();
+            recipe.nutrition = detailedInfo.nutrition; 
+          }
+        }
+      }
   
       if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
-        res.json(data.results || data); 
+        res.json(recipes); 
       } else {
         res.render('recipe', {
           title: 'Recipe Suggestions',
-          recipes: data.results || data,
-          userPreferredCuisines: user.preferences.preferredCuisines.join(', ')
+          recipes: recipes,
+          userPreferredCuisines: user.preferences.preferredCuisines.join(', '),
+          minProtein: user.preferences.minimumProtien
         }); 
       }
     } catch (error) {
@@ -246,6 +278,9 @@ app.get('/', (req, res) => {
       res.status(500).send('Internal Server Error');
     }
   });
+  
+  
+  
   
   
 app.get('/edit-preferences', ensureAuthenticated, async (req, res) => {
@@ -278,7 +313,7 @@ app.get('/edit-preferences', ensureAuthenticated, async (req, res) => {
 
 app.post('/update-preferences', ensureAuthenticated, async (req, res) => {
   try {
-    const { dietaryRestrictions, dislikedIngredients, preferredCuisines, maxPreparationTime } = req.body;
+    const { dietaryRestrictions, dislikedIngredients, preferredCuisines, minimumProtien } = req.body;
     
     await Preferences.updateOne(
       { _id: req.user.preferences },
@@ -286,7 +321,7 @@ app.post('/update-preferences', ensureAuthenticated, async (req, res) => {
         dietaryRestrictions: dietaryRestrictions.split(',').map(s => s.trim()),
         dislikedIngredients: dislikedIngredients.split(',').map(s => s.trim()),
         preferredCuisines: preferredCuisines.split(',').map(s => s.trim()),
-        maxPreparationTime: parseInt(maxPreparationTime, 10)
+        minimumProtien: parseInt(minimumProtien, 10)
       }
     );
 

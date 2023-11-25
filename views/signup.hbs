@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Sign Up & Set Preferences</title>
+        <link rel="stylesheet" href="/css/styles.css">
+
 </head>
 <body>
 
 <h2>Sign Up and Set Preferences</h2>
-<!-- Check if there is an error message and display it -->
 {{#if error}}
 <div style="color: red;">{{error}}</div>
 {{/if}}
@@ -19,12 +20,12 @@
     <input type="password" id="password" name="password" required>
     <br>
     <label for="dietaryRestrictions">Dietary Restrictions (comma-separated):</label>
-    <input type="text" id="dietaryRestrictions" name="dietaryRestrictions">
+    <input type="text" id="dietaryRestrictions" name="dietaryRestrictions" required>
     <br>
     <label for="dislikedIngredients">Disliked Ingredients (comma-separated):</label>
-    <input type="text" id="dislikedIngredients" name="dislikedIngredients">
+    <input type="text" id="dislikedIngredients" name="dislikedIngredients" required>
     <br>
-    <label for="preferredCuisines">Preferred Cuisines:</label>
+    <label for="preferredCuisines">Preferred Cuisines (hold ctrl to select many):</label>
     <select id="preferredCuisines" name="preferredCuisines" multiple>
         <option value="African">African</option>
         <option value="Asian">Asian</option>
@@ -51,8 +52,8 @@
         <option value="Vietnamese">Vietnamese</option>          
          </select>
     <br>
-    <label for="maxPreparationTime">Max Preparation Time (minutes):</label>
-    <input type="number" id="maxPreparationTime" name="maxPreparationTime">
+    <label for="minimumProtien">Minimum Protein (g):</label>
+    <input type="number" id="minimumProtien" name="minimumProtien" min="0" required>
     <br>
     <input type="submit" value="Sign Up">
 </form>

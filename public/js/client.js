@@ -12,32 +12,41 @@ if (signupForm) {
 }
 
 function handlePreferencesFormSubmit(event) {
-    event.preventDefault();
-    const formData = {
-        dietaryRestrictions: document.getElementById('dietaryRestrictions').value,
-        dislikedIngredients: document.getElementById('dislikedIngredients').value,
-        preferredCuisines: getSelectedCuisines('preferredCuisines'),
-        maxPreparationTime: document.getElementById('maxPreparationTime').value
-    };
+  event.preventDefault();
+  const formData = {
+      dietaryRestrictions: document.getElementById('dietaryRestrictions').value,
+      dislikedIngredients: document.getElementById('dislikedIngredients').value,
+      preferredCuisines: getSelectedCuisines('preferredCuisines'),
+      minimumProtien: document.getElementById('minimumProtien').value
+  };
 
-    fetch('/update-preferences', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            updatePreferencesDisplay(formData);
-        } else {
-            alert('Failed to update preferences.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+  fetch('/update-preferences', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          updatePreferencesDisplay(formData);
+          showUpdateMessage("Preferences updated successfully.", true);
+      } else {
+          showUpdateMessage("Failed to update preferences.", false);
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      showUpdateMessage("An error occurred while updating preferences.", false);
+  });
+}
+
+function showUpdateMessage(message, isSuccess) {
+  const messageElement = document.getElementById('update-message');
+  messageElement.textContent = message;
+  messageElement.style.color = isSuccess ? 'green' : 'red';
+  messageElement.style.display = 'block';
 }
 
 function handleSignupFormSubmit(event) {
@@ -59,7 +68,7 @@ function updatePreferencesDisplay(formData) {
     document.querySelector('li#dietaryRestrictions').textContent = `Dietary Restrictions: ${formData.dietaryRestrictions}`;
     document.querySelector('li#dislikedIngredients').textContent = `Disliked Ingredients: ${formData.dislikedIngredients}`;
     document.querySelector('li#preferredCuisines').textContent = `Preferred Cuisines: ${formData.preferredCuisines}`;
-    document.querySelector('li#maxPreparationTime').textContent = `Max Preparation Time: ${formData.maxPreparationTime}`;
+    document.querySelector('li#minimumProtien').textContent = `Minimum Protien: ${formData.minimumProtien}`;
 }
 
 
@@ -79,6 +88,14 @@ document.getElementById('ingredient-search-form').addEventListener('submit', fun
 
   performSearch({ ingredients: ingredients });
 });
+
+// Handle the protein search form submission
+document.getElementById('protein-search-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const minProtein = document.getElementById('protein-search').value;
+  performSearch({ minProtein: minProtein });
+});
+
 
 function performSearch(params) {
   const query = new URLSearchParams(params).toString();
@@ -103,18 +120,40 @@ function updateRecipesOnPage(recipes) {
   recipesContainer.innerHTML = ''; 
 
   recipes.forEach(recipe => {
-      const recipeElement = document.createElement('div');
-      const titleElement = document.createElement('h2');
-      titleElement.textContent = recipe.title;
-      recipeElement.appendChild(titleElement);
+    const recipeElement = document.createElement('div');
+    const titleElement = document.createElement('h2');
+    titleElement.textContent = recipe.title;
+    recipeElement.appendChild(titleElement);
 
-      if (recipe.image) {
-          const imageElement = document.createElement('img');
-          imageElement.src = recipe.image;
-          imageElement.alt = recipe.title;
-          recipeElement.appendChild(imageElement);
-      }
+    if (recipe.image) {
+      const imageElement = document.createElement('img');
+      imageElement.src = recipe.image;
+      imageElement.alt = recipe.title;
+      recipeElement.appendChild(imageElement);
+    }
 
-      recipesContainer.appendChild(recipeElement);
+    // Add nutritional information, if available
+    const nutritionInfo = extractNutritionInfo(recipe.nutrition);
+    for (const [key, value] of Object.entries(nutritionInfo)) {
+      const p = document.createElement('p');
+      p.textContent = `${key}: ${value}`;
+      recipeElement.appendChild(p);
+    }
+
+    recipesContainer.appendChild(recipeElement);
   });
+}
+
+function extractNutritionInfo(nutrition) {
+  const requiredNutrients = ['Calories', 'Carbohydrates', 'Fat', 'Protein'];
+  const nutritionInfo = {};
+
+  if (nutrition && nutrition.nutrients) {
+    requiredNutrients.forEach(nutrientName => {
+      const nutrient = nutrition.nutrients.find(n => n.name === nutrientName);
+      nutritionInfo[nutrientName] = nutrient ? `${nutrient.amount}${nutrient.unit}` : 'Not available';
+    });
+  }
+
+  return nutritionInfo;
 }

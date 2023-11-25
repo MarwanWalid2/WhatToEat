@@ -12,25 +12,17 @@ const UserSchema = new mongoose.Schema({
   dislikedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }]
 });
 
-const RecipeSchema = new mongoose.Schema({
-  title: String,
-  ingredients: [String],
-  dietaryRestrictions: [String],
-  preparationTime: Number,
-  likes: Number,
-  dislikes: Number
-});
+
 
 const PreferencesSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   dietaryRestrictions: [String],
   dislikedIngredients: [String],
   preferredCuisines: [String],
-  maxPreparationTime: Number
+  minimumProtien: Number
 });
 
 const User = mongoose.model('User', UserSchema);
-const Recipe = mongoose.model('Recipe', RecipeSchema);
 const Preferences = mongoose.model('Preferences', PreferencesSchema);
 
 // mongoose.connect(process.env.DSN, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -42,4 +34,4 @@ mongoose.connect(process.env.DSN, {})
         console.log(err);
     });
 
-export { User, Recipe, Preferences };
+export { User, Preferences };

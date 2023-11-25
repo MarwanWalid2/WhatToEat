@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Login - What to Eat Today</title>
+        <link rel="stylesheet" href="/css/styles.css">
+
 </head>
 <body>
     <h2>Login</h2>
+    {{#if error}}
+      <div class="error">{{error}}</div>
+    {{/if}}
     <form id="login-form" action="/login" method="POST">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
@@ -16,9 +21,9 @@
         <input type="submit" value="Login">
     </form>
 
-     <form action="/signup" method="get">
+    <form action="/signup" method="get">
         <button type="submit">Sign Up Instead?</button>
     </form>
-
 </body>
+
 </html>

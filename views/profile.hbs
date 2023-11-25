@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>{{title}}</title>
+        <link rel="stylesheet" href="/css/styles.css">
+
 </head>
 <body>
     <h1>Profile Page</h1>
     <p>Welcome, {{user.username}}!</p>
+    <div class="profile-preferences">
     <p>Your preferences:</p>
     <ul>
       <li>Dietary Restrictions: {{user.preferences.dietaryRestrictions}}</li>
       <li>Disliked Ingredients: {{user.preferences.dislikedIngredients}}</li>
       <li>Preferred Cuisines: {{user.preferences.preferredCuisines}}</li>
     </ul>
-
+</div>
     <a href="/edit-preferences">Edit Preferences</a>
 
     <a href="/recipes">Check recipes</a>

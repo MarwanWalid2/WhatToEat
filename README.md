@@ -13,7 +13,6 @@ The application will store Users, Recipes, and Preferences:
   * Recipes can be liked or disliked by multiple users (via references).
   * Preferences are used to filter and suggest recipes to the user.
 
-(__TODO__: sample documents)
 
 An Example User:
 
@@ -36,7 +35,7 @@ An Example Preferences:
   dietaryRestrictions: ["vegan", "gluten-free"],
   dislikedIngredients: ["nuts", "dairy"],
   preferredCuisines: ["Italian", "Mexican"],
-  maxPreparationTime: 60 // in minutes
+  minProtien: 60 // in g
 }
 
 ```
