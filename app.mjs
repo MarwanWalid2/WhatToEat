@@ -230,7 +230,7 @@ app.get('/', (req, res) => {
       }
   
       let apiUrl;
-      let queryParams = new URLSearchParams({ number: 3 });
+      let queryParams = new URLSearchParams({ number: 10 });
       const apiKey = process.env.API_KEY;
 
       if (req.query.ingredients) {
