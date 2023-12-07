@@ -1,4 +1,4 @@
-# [What to Eat Today?] (https://whattoeat-f3667d115c2c.herokuapp.com/)
+# ![What to Eat Today?] (https://whattoeat-f3667d115c2c.herokuapp.com/)
 
 ## Overview
 
